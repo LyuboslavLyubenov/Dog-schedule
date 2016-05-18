@@ -4,7 +4,7 @@
 
     angular
         .module('DogWalkingSchedule')
-        .config(['$routeProvider', '$kinveyProvider' ,
+        .config(['$routeProvider', '$kinveyProvider',
             function ($routeProvider, $kinveyProvider) {
                 $kinveyProvider.init({
                     appKey: appKey,
@@ -20,14 +20,14 @@
                     redirectLoggedInUser: redirectLoggedInUser
                 };
 
-                function redirectGuestUser($location) {
-                    if (!sessionStorage.getItem('username')) {
-                        $location.url('/');
+                function redirectLoggedInUser($location) {
+                    if (sessionStorage.getItem('username')) {
+                        $location.url('/calendar/');
                     }
                 }
 
-                function redirectLoggedInUser($location) {
-                    if (sessionStorage.getItem('username')) {
+                function redirectGuestUser($location) {
+                    if (!sessionStorage.getItem('username')) {
                         $location.url('/');
                     }
                 }
@@ -40,7 +40,23 @@
                     templateUrl: 'partials/user-screen.html',
                     controller: 'UserScreenController',
                     resolve: resolveRedirectGuestUser
-                }).otherwise('/');
+                }).when('/logout', {
+                    controller: ['$kinvey', '$location',
+                        function ($kinvey, $location) {
+                            var currentUserPromise = $kinvey.User.current();
+
+                            currentUserPromise.$logout().then(function () {
+                                alertify.notify('Успешно излезна от профила си', 'success', 5);
+                                sessionStorage.clear();
+                                $location.url('/');
+                            }, function (error) {
+                                alertify.notify('Проблем при излизане от профила. Моля провери интернет връзката и/или кажи на любо!!!', 'error', 7);
+                                console.error(error);
+                            });
+                        }
+                    ]
+                })
+                    .otherwise('/');
             }
         ]);
 })();
