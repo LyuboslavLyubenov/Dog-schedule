@@ -1,8 +1,16 @@
 (function() {
+    var appKey = 'kid_Wkc5Z0XpfW',
+        appSecret = '5e75ec49d5a44349a121863c660a01ae';
+
     angular
         .module('DogWalkingSchedule')
-        .config(['$routeProvider',
-            function ($routeProvider) {
+        .config(['$routeProvider', '$kinveyProvider' ,
+            function ($routeProvider, $kinveyProvider) {
+                $kinveyProvider.init({
+                    appKey: appKey,
+                    appSecret: appSecret,
+                    storage: 'cookies'
+                });
 
                 var resolveRedirectGuestUser = {
                     redirectGuestUser: redirectGuestUser
@@ -18,7 +26,7 @@
                     }
                 }
 
-                function redirectLoggedInUser() {
+                function redirectLoggedInUser($location) {
                     if (sessionStorage.getItem('username')) {
                         $location.url('/');
                     }
@@ -28,13 +36,11 @@
                     templateUrl: 'partials/guest-screen.html',
                     controller: 'GuestScreenController',
                     resolve: resolveRedirectLoggedInUser
-                });
-
-                $routeProvider.when('/calendar', {
+                }).when('/calendar/', {
                     templateUrl: 'partials/user-screen.html',
                     controller: 'UserScreenController',
                     resolve: resolveRedirectGuestUser
-                });
+                }).otherwise('/');
             }
         ]);
 })();
