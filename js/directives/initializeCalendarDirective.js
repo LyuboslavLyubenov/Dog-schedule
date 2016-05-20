@@ -1,8 +1,11 @@
 (function () {
+
+    const errorMessage = 'Проблем при връзката със сървъра. Моля провери интернет връзката си и викни любо!!!';
+
     angular
         .module('DogWalkingSchedule')
-        .directive('initializeCalendar', ['$kinvey',
-            function ($kinvey) {
+        .directive('initializeCalendar', ['$kinvey', '$route',
+            function ($kinvey, $route) {
 
                 function convertEventsData(events) {
                     var result = [];
@@ -46,7 +49,6 @@
                                     return;
                                 }
 
-                                const errorMessage = 'Проблем при връзката със сървъра. Моля провери интернет връзката си и викни любо!!!';
 
                                 var startDate = moment(calEvent.start).calendar(),
                                     endDate = moment(calEvent.end).calendar();
@@ -82,7 +84,7 @@
 
                                         modifiedEvent.$save().then(function () {
                                             alertify.notify('Успешно изпълни задача! Браво!', 'success', 5);
-                                            calendar.fullCalendar('refetchEvents');
+                                            $route.reload();
                                         }, function (error) {
                                             alertify.notify(errorMessage, 'error', 7);
                                             console.error(error);
@@ -97,7 +99,7 @@
                         });
 
                     }, function (error) {
-                        alertify.notify('Проблем със връзката със сървъра. Питай любо', 'error', 7);
+                        alertify.notify(errorMessage, 'error', 7);
                         console.error(error);
                     });
                 }
