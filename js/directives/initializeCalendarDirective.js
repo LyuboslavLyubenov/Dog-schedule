@@ -18,13 +18,15 @@
 
                 function link(scope, element, attrs) {
                     var events = $kinvey.Object('Events');
+                    var calendar;
 
                     events.query({
                         query: {
-                            assignee: 'dead4y'
+                            assignee: 'dead4y',
+                            isCompleted: false
                         }
                     }).$promise.then(function (success) {
-                        $(element).fullCalendar({
+                        calendar = $(element).fullCalendar({
                             header: {
                                 left: '',
                                 right: ''
@@ -35,6 +37,15 @@
                             events: convertEventsData(success),
                             scope: {},
                             eventClick: function (calEvent, jsEvent, view) {
+
+                                var start = calEvent.start.local(),
+                                    end = calEvent.end.local(),
+                                    now = moment();
+
+                                if (now < start || now >= end) {
+                                    return;
+                                }
+
                                 const errorMessage = 'Проблем при връзката със сървъра. Моля провери интернет връзката си и викни любо!!!';
 
                                 var startDate = moment(calEvent.start).calendar(),
@@ -53,31 +64,25 @@
                                     onok: onOK
                                 }).show();
 
-
-
                                 function onOK() {
                                     //TODO
                                     var allEvents = $kinvey.Object('Events'),
-                                        startDate = formatDate(calEvent.start),
-                                        endDate = formatDate(calEvent.end),
-                                        username = sessionStorage.getItem('username'),
+                                        startDate = calEvent.start.format(),
                                         event = allEvents.query({
                                             query: {
-                                                start: startDate,
-                                                end: endDate,
-                                                assignee: username
+                                                start: startDate.split('+')[0]
                                             }
                                         });
 
-                                    function formatDate(date) {
-                                        var result = moment(date).format();
-                                        return result.slice(0, result.length - 1);
-                                    }
-
                                     event.$promise.then(function (success) {
-                                        success[0].isCompleted = true;
-                                        success.$save().$promise.then(function () {
+                                        var modifiedEvent = success[0];
+                                        modifiedEvent.isCompleted = true;
+                                        delete modifiedEvent._acl;
+                                        delete modifiedEvent._kmd;
+
+                                        modifiedEvent.$save().then(function () {
                                             alertify.notify('Успешно изпълни задача! Браво!', 'success', 5);
+                                            calendar.fullCalendar('refetchEvents');
                                         }, function (error) {
                                             alertify.notify(errorMessage, 'error', 7);
                                             console.error(error);

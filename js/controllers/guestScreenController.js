@@ -1,8 +1,12 @@
 (function() {
+
+    const InvalidCredentials = 'Проблем при влизане във профила. Провери името и паролата и опитай отново!';
+    const NetworkProblem = 'Проблем с интернет връзката. Моля опитайте по късно!';
+
     angular
         .module('DogWalkingSchedule')
-        .controller('GuestScreenController', ['$kinvey', '$scope',
-            function ($kinvey, $scope) {
+        .controller('GuestScreenController', ['$kinvey', '$scope', '$location',
+            function ($kinvey, $scope, $location) {
                 var loginData = {
                     username: '',
                     password: ''
@@ -18,9 +22,19 @@
                         function (user) {
                             sessionStorage.setItem('username', user.username);
                             alertify.notify('Успешно влезе във профила си', 'success', 5);
+                            $location.url('/calendar/');
                         },
                         function (error) {
-                            alertify.notify('Проблем при влизане във профила', 'error', 5);
+
+                            var msg = '';
+
+                            if (error.status === 401) {
+                                msg = InvalidCredentials;
+                            } else {
+                                msg = NetworkProblem;
+                            }
+
+                            alertify.notify(msg, 'error', 7);
                             console.error(error);
                         }
                     );

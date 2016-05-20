@@ -38,7 +38,6 @@
                     resolve: resolveRedirectLoggedInUser
                 }).when('/calendar/', {
                     templateUrl: 'partials/user-screen.html',
-                    controller: 'UserScreenController',
                     resolve: resolveRedirectGuestUser
                 }).when('/logout', {
                     controller: ['$kinvey', '$location',
