@@ -3,7 +3,7 @@
     const errorMessage = 'Проблем при връзката със сървъра. Моля провери интернет връзката си и викни любо!!!';
 
     angular
-        .module('DogWalkingSchedule')
+        .module('DogSchedule')
         .directive('initializeCalendar', ['$kinvey', '$route',
             function ($kinvey, $route) {
 

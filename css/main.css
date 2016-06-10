@@ -10,3 +10,27 @@
     /* inline-block space fix */
     margin-right:-4px;
 }
+
+/* Start Dialog box */
+#dialogBox {
+    display: block;
+    position: fixed;
+    margin: auto;
+    width: 60%;
+    height: 40%;
+    left: 25%;
+    top: 30%;
+    color: white;
+    border: 2px white solid;
+    background-color: rgba(0, 0, 0, 0.4);
+}
+
+.modal {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    margin: auto;
+    background-color:  rgba(0, 0, 0, 0.4);
+}
+
+/* End Dialog box */

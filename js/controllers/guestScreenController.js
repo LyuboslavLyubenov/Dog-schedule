@@ -4,7 +4,7 @@
     const NetworkProblem = 'Проблем с интернет връзката. Моля опитайте по късно!';
 
     angular
-        .module('DogWalkingSchedule')
+        .module('DogSchedule')
         .controller('GuestScreenController', ['$kinvey', '$scope', '$location',
             function ($kinvey, $scope, $location) {
                 var loginData = {

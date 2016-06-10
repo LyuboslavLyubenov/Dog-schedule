@@ -1,4 +1,4 @@
 (function() {
     angular
-        .module('DogWalkingSchedule', ['ngRoute', 'ngResource', 'ngCookies', 'kinvey']);
+        .module('DogSchedule', ['ngRoute', 'ngResource', 'ngCookies', 'kinvey']);
 })();

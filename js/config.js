@@ -3,7 +3,7 @@
         appSecret = '5e75ec49d5a44349a121863c660a01ae';
 
     angular
-        .module('DogWalkingSchedule')
+        .module('DogSchedule')
         .config(['$routeProvider', '$kinveyProvider',
             function ($routeProvider, $kinveyProvider) {
                 $kinveyProvider.init({
